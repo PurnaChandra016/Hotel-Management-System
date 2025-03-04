@@ -1,0 +1,138 @@
+HTML (index.html)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="hotel-management">
+    <h1>Hotel Management System</h1>
+    <div>
+      <h2>Add Room</h2>
+      <input type="text" id="roomNumber" placeholder="Room Number">
+      <button onclick="addRoom()">Add Room</button>
+    </div>
+    <div>
+      <h2>Book Room</h2>
+      <input type="text" id="guestName" placeholder="Guest Name">
+      <select id="availableRooms"></select>
+      <button onclick="bookRoom()">Book Room</button>
+    </div>
+    <div>
+      <h2>Bookings</h2>
+      <ul id="bookings"></ul>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+CSS (styles.css)
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+.hotel-management {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f8f9fa;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+JavaScript (script.js)
+
+let rooms = [];
+let bookings = [];
+
+function addRoom() {
+  const roomNumber = document.getElementById("roomNumber").value;
+  if (roomNumber && !rooms.includes(roomNumber)) {
+    rooms.push(roomNumber);
+    updateAvailableRooms();
+    document.getElementById("roomNumber").value = "";
+  } else {
+    alert("Invalid room number or room already exists!");
+  }
+}
+
+function bookRoom() {
+  const guestName = document.getElementById("guestName").value;
+  const roomNumber = document.getElementById("availableRooms").value;
+
+  if (guestName && roomNumber) {
+    bookings.push({ guestName, roomNumber });
+    rooms = rooms.filter((room) => room !== roomNumber);
+    updateAvailableRooms();
+    updateBookings();
+    document.getElementById("guestName").value = "";
+  } else {
+    alert("Please enter guest name and select a room!");
+  }
+}
+
+function updateAvailableRooms() {
+  const availableRooms = document.getElementById("availableRooms");
+  availableRooms.innerHTML = "";
+  rooms.forEach((room) => {
+    const option = document.createElement("option");
+    option.value = room;
+    option.textContent = room;
+    availableRooms.appendChild(option);
+  });
+}
+
+function updateBookings() {
+  const bookingsList = document.getElementById("bookings");
+  bookingsList.innerHTML = "";
+  bookings.forEach((booking) => {
+    const li = document.createElement("li");
+    li.textContent = `Room ${booking.roomNumber} - ${booking.guestName}`;
+    bookingsList.appendChild(li);
+  });
+}
+
+updateAvailableRooms();
